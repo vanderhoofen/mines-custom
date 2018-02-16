@@ -3,13 +3,6 @@
 # URL: https://www.gnu.org/software/bash/manual/bashref.html#Bash-Startup-Files
 
 ################################################################################
-#                                 bashrc                                       #
-################################################################################
-if [ -f ~/.bashrc ] ; then
-    source ~/.bashrc
-fi
-
-################################################################################
 #                                 PATH                                         #
 ################################################################################
 pathadd() {
@@ -36,7 +29,7 @@ pathadd /usr/local/opt/tcl-tk/bin after
 pathadd /usr/local/sbin after
 pathadd /usr/bin after
 pathadd /Applications/Wireshark.app/Contents/MacOS after
-pathadd /usr/local/share/python after
+#pathadd /usr/local/share/python after
 pathadd ~/bin after
 
 ###############################################################################
@@ -59,41 +52,19 @@ if [[ $PS1 && -f /usr/local/share/bash-completion/bash_completion ]]; then
     . /usr/local/share/bash-completion/bash_completion
 fi
 
-# brew
-#source /usr/local/etc/bash_completion.d/brew
-
-# shellcheck disable=SC1090
-source <(kubectl completion bash)
-
-# minikube
-# shellcheck disable=SC1090
-source <(minikube completion bash)
-
-# helm
-# shellcheck disable=SC1090
-source <(helm completion bash)
-export HELM_HOME="$HOME/.helm"
-
-# docker
-#source /usr/local/etc/bash_completion.d/docker
-#source /usr/local/etc/bash_completion.d/docker-compose
-#source /usr/local/etc/bash_completion.d/docker-machine.bash
-#source /usr/local/etc/bash_completion.d/docker-machine-wrapper.bash
-#eval "$(docker-machine env default)"
-
-# git
-#source /usr/local/etc/bash_completion.d/git-completion.bash
-
 ###############################################################################
-###                                 Powerline                               ###
+###                                   Bash                                  ###
 ###############################################################################
-if [ -f "$(which powerline-config)" ]; then
-  powerline-daemon -q
-  POWERLINE_ROOT=~/code/powerline
-  export POWERLINE_CONFIG_COMMAND=powerline-config
-  export POWERLINE_BASH_CONTINUATION=1
-  export POWERLINE_BASH_SELECT=1
-  . $POWERLINE_ROOT/powerline/bindings/bash/powerline.sh
+export SHELL='/usr/local/bin/bash'
+export BASH_VERSION="$(bash --version | head -1 | awk -F " " '{print $4}')"
+# ShellCheck: Ignore: https://goo.gl/n9W5ly
+export SHELLCHECK_OPTS="-e SC2155"
+
+################################################################################
+###                                 bashrc                                   ###
+################################################################################
+if [ -f ~/.bashrc ] ; then
+    source ~/.bashrc
 fi
 
 

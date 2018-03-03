@@ -1,15 +1,11 @@
 # vim: set ts=4 sw=4 sts=4 et :
 
-###############################################################################
-###                                   Vim                                   ###
-###############################################################################
+### vim
 export EDITOR='/usr/local/bin/vim'
 alias vi="$EDITOR"
 alias nim='/usr/local/bin/nvim'
 
-###############################################################################
-###                                  System                                 ###
-###############################################################################
+### System
 # export TERM='xterm-256color'
 export TERM='screen'
 export HISTFILESIZE=
@@ -23,15 +19,13 @@ export HISTCONTROL=ignoredups
 export HISTTIMEFORMAT="%a%l:%M %p  "
 export HISTIGNORE='ls:bg:fg:history'
 
-###############################################################################
-###                                coreutils                                ###
-###############################################################################
+### coreutils
 export MANPATH=/usr/local/opt/coreutils/libexec/gnuman:/usr/local/share/man:/usr/share/man
 # Filesystem Operational Behavior
-function ll { ls --color -l   "$@" | egrep -v '.(DS_Store|CFUserTextEncoding)'; }
-function la { ls --color -al  "$@" | egrep -v '.(DS_Store|CFUserTextEncoding)'; }
-function ld { ls --color -ld  "$@" | egrep -v '.(DS_Store|CFUserTextEncoding)'; }
-function lh { ls --color -alh "$@" | egrep -v '.(DS_Store|CFUserTextEncoding)'; }
+function ll { ls -l   "$@" | egrep -v '.(DS_Store|CFUserTextEncoding)'; }
+function la { ls -al  "$@" | egrep -v '.(DS_Store|CFUserTextEncoding)'; }
+function ld { ls -ld  "$@" | egrep -v '.(DS_Store|CFUserTextEncoding)'; }
+function lh { ls -alh "$@" | egrep -v '.(DS_Store|CFUserTextEncoding)'; }
 alias cp='cp -rfvp'
 alias mv='mv -v'
 # FIX: alias for GNU zip/unzip do not work
@@ -72,19 +66,21 @@ function findMyStuff()   {
 }
 alias findmy=findMyStuff
 
-###############################################################################
-###                                VirtualBox                               ###
-###############################################################################
+
+### homebrew completions
+if [[ $PS1 ]] ; then
+	if [ -f /usr/local/Homebrew/completions/bash/brew ] ; then
+		source /usr/local/Homebrew/completions/bash/brew
+	fi
+fi
+
+### VirtualBox
 export VBOX_USER_HOME="$HOME/vms/vbox"
 
-###############################################################################
-###                                  VMware                                 ###
-###############################################################################
+### VMware
 export VMWARE_STORAGE="$HOME/vms/vmware"
 
-###############################################################################
-###                                  Python                                 ###
-###############################################################################
+### Python
 export PIP_CONFIG_FILE="$HOME/.config/python/pip.conf"
 # Setup autoenv to your tastes
 #export AUTOENV_AUTH_FILE="$HOME/.config/python/autoenv_authorized"
@@ -92,52 +88,32 @@ export PIP_CONFIG_FILE="$HOME/.config/python/pip.conf"
 #export AUTOENV_LOWER_FIRST=''
 #source /usr/local/bin/activate.sh
 
-###############################################################################
-###                                   Ruby                                  ###
-###############################################################################
-#source /usr/local/opt/chruby/share/chruby/chruby.sh
-#source /usr/local/opt/chruby/share/chruby/auto.sh
-eval "$(rbenv init -)"
+### Ruby
+[[ $PS1 ]] && which rbenv >&- && eval "$(rbenv init -)"
 
-###############################################################################
-###                                    Go                                   ###
-###############################################################################
-export GOPATH="$HOME/code/gocode"
-alias mygo="cd $GOPATH"
+### GO
+export GOPATH=$HOME/code/go
+[[ $PS1 ]] && which go >&- && pathadd $GOPATH/bin after
 
-###############################################################################
-###                                  npm                                    ###
-###############################################################################
-source /usr/local/etc/bash_completion.d/npm
-
-###############################################################################
-###                             Remote Access                               ###
-###############################################################################
+### Remote Access
 # HashiCorp Atlas
 export ATLAS_TOKEN=''
 # Homebrew / Github
 export HOMEBREW_GITHUB_API_TOKEN=''
 
-###############################################################################
-###                                 Amazon                                  ###
-###############################################################################
+### Amazon
 complete -C "$(type -P aws_completer)" aws
-export AWS_REGION='us-west-1'
-export AWS_PROFILE='matthew'
+export AWS_REGION=${AWS_REGION:-us-east-1}
+export AWS_PROFILE=${AWS_PROFILE:-$USER}
 export AWS_CONFIG_FILE="$HOME/.aws/config"
 
-###############################################################################
-###                                Terraform                                ###
-###############################################################################
+### Terraform
 alias tf='/usr/local/bin/terraform'
 export TF_VAR_AWS_PROFILE="$AWS_PROFILE"
 export TF_LOG='DEBUG'
 export TF_LOG_PATH='/tmp/terraform.log'
 
-###############################################################################
-###                                  Packer                                 ###
-###############################################################################
-source /usr/local/etc/bash_completion.d/packer
+### Packer
 export PACKER_HOME="$HOME/vms/packer"
 # leave PACKER_CONFIG commented till you need it
 #export PACKER_CONFIG="$PACKER_HOME"
@@ -147,25 +123,17 @@ export PACKER_LOG='yes'
 export PACKER_LOG_PATH='/tmp/packer.log'
 export PACKER_NO_COLOR='no'
 
-###############################################################################
-###                                 Vagrant                                 ###
-###############################################################################
-source /usr/local/etc/bash_completion.d/vagrant
+### Vagrant
 #export VAGRANT_LOG=debug
 export VAGRANT_HOME="$HOME/vms/vagrant"
 export VAGRANT_BOXES="$VAGRANT_HOME/boxes"
 export VAGRANT_DEFAULT_PROVIDER='virtualbox'
 
-###############################################################################
-###                                 Ansible                                 ###
-###############################################################################
+### Ansible
 export ANSIBLE_CONFIG="$HOME/.ansible"
 
-
-###############################################################################
-###                                 Powerline                               ###
-###############################################################################
-if [ -f "$(which powerline-config)" ]; then
+### Powerline
+[[ $PS1 ]] && if which powerline-config >&- ; then
   powerline-daemon -q
   POWERLINE_ROOT=~/code/powerline
   export POWERLINE_CONFIG_COMMAND=powerline-config
@@ -174,61 +142,19 @@ if [ -f "$(which powerline-config)" ]; then
   . $POWERLINE_ROOT/powerline/bindings/bash/powerline.sh
 fi
 
-###############################################################################
-###                                 Brew                                    ###
-###############################################################################
-source /usr/local/etc/bash_completion.d/brew
-
-###############################################################################
-###                                 kubectl                                 ###
-###############################################################################
+### kubectl
 # shellcheck disable=SC1090
-source <(kubectl completion bash)
+[[ $PS1 ]] && which kubectl >&- && source <(kubectl completion bash)
 alias k='kubectl'
+#export KUBECONFIG=~/.config/kubernetes/admin.conf
 
-###############################################################################
-###                                 minikube                                ###
-###############################################################################
+### minikube ###
 # shellcheck disable=SC1090
-source <(minikube completion bash)
+[[ $PS1 ]] && which minikube >&- && source <(minikube completion bash)
 
-###############################################################################
-###                                 helm                                    ###
-###############################################################################
+### helm
 # shellcheck disable=SC1090
-source <(helm completion bash)
+[[ $PS1 ]] && which helm >&- && source <(helm completion bash)
 export HELM_HOME="$HOME/.helm"
-
-###############################################################################
-###                                 docker                                  ###
-###############################################################################
-eval "$(docker-machine status >/dev/null && docker-machine env default)"
-
-source <(docker-ls autocomplete bash)
-
-
-# docker
-#source /usr/local/etc/bash_completion.d/docker
-#source /usr/local/etc/bash_completion.d/docker-compose
-#source /usr/local/etc/bash_completion.d/docker-machine.bash
-#source /usr/local/etc/bash_completion.d/docker-machine-wrapper.bash
-
-# boot2docker
-# eval "$(boot2docker shellinit)"
-
-###############################################################################
-###                                 git                                     ###
-###############################################################################
-source /usr/local/etc/bash_completion.d/git-completion.bash
-
-###############################################################################
-###                                  mac-ops                                ###
-###############################################################################
-alias mac-ops='phase0'
-# shellcheck disable=SC2148,SC1090,SC1091,SC2012,SC2139
-#declare sysBashrc='/etc/bashrc'
-#if [[ -f "$sysBashrc" ]]; then
-#    . "$sysBashrc"
-#fi
 
 

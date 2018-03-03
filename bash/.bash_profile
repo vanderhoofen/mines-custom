@@ -28,14 +28,15 @@ pathadd /Applications/Wireshark.app/Contents/MacOS after
 #pathadd /usr/local/share/python after
 pathadd ~/bin after
 
+
 ### ssh-agent
 if [ ! -S ~/.ssh/ssh_auth_sock ]; then
-    ssh-agent > ~/.ssh/ssh-agent.env
-    ln -s $SSH_AGENT_SOCK ~/.ssh/ssh_auth_sock
+  eval `ssh-agent` >/dev/null
+  ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
 fi
-source ~/.ssh/ssh-agent.env
+export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 shopt -s extglob
-ssh-add -l > /dev/null || ssh-add ~/.ssh/id!(*.pub)
+ssh-add -l >/dev/null || ssh-add ~/.ssh/id!(*.pub)
 
 
 ### BASH COMPLETIONS

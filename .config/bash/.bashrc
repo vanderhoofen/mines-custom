@@ -1,9 +1,25 @@
 # vim: set ts=4 sw=4 sts=4 et :
 
+if_exist_alias_it(){
+  alias_name="$1"
+  location="$2"
+  if [ -e "$location" ] ; then
+      eval alias $alias_name="$location"
+  fi
+}
+
+if_exist_export_it(){
+  VAR="$1"
+  location="$2"
+  if [ -e "$location" ] ; then
+      eval export $VAR="$location"
+  fi
+}
+
 ### vim
-export EDITOR='/usr/local/bin/vim'
-alias vi="$EDITOR"
-alias nim='/usr/local/bin/nvim'
+if_exist_export_it EDITOR '/usr/local/bin/vim'
+if_exist_alias_it vi "$EDITOR"
+if_exist_alias_it nim '/usr/local/bin/nvim'
 
 ### System
 # export TERM='xterm-256color'
@@ -29,8 +45,8 @@ function lh { ls -alh "$@" | egrep -v '.(DS_Store|CFUserTextEncoding)'; }
 alias cp='cp -rfvp'
 alias mv='mv -v'
 # FIX: alias for GNU zip/unzip do not work
-alias zip='/usr/local/bin/gzip'
-alias unzip='/usr/local/bin/gunzip'
+if_exist_alias_it zip '/usr/local/bin/gzip'
+if_exist_alias_it unzip '/usr/local/bin/gunzip'
 alias hist='history | cut -c 21-'
 alias grep='grep   --color=auto' 2>/dev/null
 alias egrep='egrep --color=auto' 2>/dev/null
@@ -108,7 +124,7 @@ export AWS_PROFILE=${AWS_PROFILE:-$USER}
 export AWS_CONFIG_FILE="$HOME/.aws/config"
 
 ### Terraform
-alias tf='/usr/local/bin/terraform'
+if_exist_alias_it tf '/usr/local/bin/terraform'
 export TF_VAR_AWS_PROFILE="$AWS_PROFILE"
 export TF_LOG='INFO'
 export TF_LOG_PATH='/tmp/terraform.log'

@@ -2,6 +2,9 @@
 # vim: set ts=4 sw=4 sts=4 et :
 # URL: https://www.gnu.org/software/bash/manual/bashref.html#Bash-Startup-Files
 
+# PS1 reasonable default
+export PS1="\[\033[0;32m\]\h \[\033[0;33m\]\w\[\033[0;0m\] \n\[\033[0;37m\]$(date +%H:%M)\[\033[0;0m\] $ "
+
 # PATH
 pathadd() {
     newelement=${1%/}

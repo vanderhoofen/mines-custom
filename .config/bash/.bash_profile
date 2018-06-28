@@ -3,7 +3,7 @@
 # URL: https://www.gnu.org/software/bash/manual/bashref.html#Bash-Startup-Files
 
 # PS1 reasonable default
-if [[ $PS1 ]] && export PS1="\[\033[0;32m\]\h \[\033[0;33m\]\w\[\033[0;0m\] \n\[\033[0;37m\]$(date +%H:%M)\[\033[0;0m\] $ "
+[[ $PS1 ]] && export PS1="\[\033[0;32m\]\h \[\033[0;33m\]\w\[\033[0;0m\] \n\[\033[0;37m\]$(date +%H:%M)\[\033[0;0m\] $ "
 
 
 if_exist_alias_it(){
@@ -56,7 +56,7 @@ if [ ! -S ~/.ssh/ssh_auth_sock ]; then
 fi
 export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 shopt -s extglob
-ssh-add -l >/dev/null || ssh-add ~/.ssh/id!(*.pub)
+ssh-add -l >/dev/null || ssh-add $( ls ~/.ssh/id_* | grep -v "\.pub" )
 
 
 ### BASH COMPLETIONS

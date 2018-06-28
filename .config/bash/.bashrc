@@ -110,7 +110,7 @@ export AWS_CONFIG_FILE="$HOME/.aws/config"
 ### Terraform
 alias tf='/usr/local/bin/terraform'
 export TF_VAR_AWS_PROFILE="$AWS_PROFILE"
-export TF_LOG='DEBUG'
+export TF_LOG='INFO'
 export TF_LOG_PATH='/tmp/terraform.log'
 
 ### Packer
@@ -158,3 +158,11 @@ alias k='kubectl'
 export HELM_HOME="$HOME/.helm"
 
 
+cleanup_images(){
+  [[ -z "$1" ]] && return
+  for i in $( docker ps -a | grep Exited | awk '/'$1'/ {print $1}' ) ; do
+    docker rm $i
+  done
+}
+
+stop_images(){   [[ -z "$1" ]] && return;   for i in $( docker ps -a | grep "Up " | awk '/'$1'/ {print $1}' ) ; do     docker stop $i;   done; }

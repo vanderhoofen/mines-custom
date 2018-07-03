@@ -176,7 +176,7 @@ export HELM_HOME="$HOME/.helm"
 
 cleanup_images(){
   [[ -z "$1" ]] && return
-  for i in $( docker ps -a | grep Exited | awk '/'$1'/ {print $1}' ) ; do
+  for i in $( docker ps -a | egrep "(Exited|Created)" | awk '/'$1'/ {print $1}' ) ; do
     docker rm $i
   done
 }
